@@ -3,6 +3,9 @@ var a = new XMLHttpRequest();
 var b = new XMLHttpRequest();
 
 function refresh() {
+  document.getElementById('token').innerHTML = '...';
+  document.getElementById('result').innerHTML = '...';
+
   var client_id = document.getElementById('api_key').value;
   var client_secret = document.getElementById('password').value;
   var base = document.getElementById('base').value;
