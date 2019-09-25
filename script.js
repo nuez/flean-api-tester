@@ -3,7 +3,6 @@ var a = new XMLHttpRequest();
 var b = new XMLHttpRequest();
 
 function refresh() {
-  const start = performance.now();
   document.getElementById('token').innerHTML = '...';
   document.getElementById('result').innerHTML = '...';
   var client_id = document.getElementById('api_key').value;
@@ -19,7 +18,7 @@ function refresh() {
   if(token && Date.now() < token.expires_in){
     var ms = token.expires_in - Date.now();
     document.getElementById('token-expire').innerHTML = 'Expires in ' + ms + ' milliseconds.';
-    loadResponse(base, request_uri, token, start);
+    loadResponse(base, request_uri, token);
   }
   else {
     a.open('POST', base + '/oauth/token', true);
@@ -39,17 +38,18 @@ function refresh() {
       } else {
         token.expires_in = Date.now() + token.expires_in*1000;
         localStorage.setItem('token', JSON.stringify(token));
-        loadResponse(base, request_uri, token, start);
+        loadResponse(base, request_uri, token);
       }
     }
   }
 
 }
 
-function loadResponse(base, request_uri, token, start){
+function loadResponse(base, request_uri, token){
   document.getElementById('token').innerHTML = 'Token: ' + token.access_token;
   b.open('GET', base + request_uri, true);
   b.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+  var start = performance.now();
   b.send(null);
   b.onload = function () {
     const prettyJSON = JSON.stringify(JSON.parse(b.responseText), null, 2);
